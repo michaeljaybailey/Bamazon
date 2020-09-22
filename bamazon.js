@@ -31,4 +31,37 @@ var connection = mysql.createConnection({
       });
   }
 
+  function askItem(inventory) { 
+      
+    inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "choice",
+        message: "What is the ID of the item you would you like to purchase? [Quit with Q]",
+        validate: function(val) {
+          return !isNaN(val) || val.toLowerCase() === "q";
+        }
+      }
+    ])
+    .then(function(val) {
+      
+      checkIfShouldExit(val.choice);
+      var choiceId = parseInt(val.choice);
+      var product = checkInventory(choiceId, inventory);
+
+     
+      if (product) {
+        
+        askQuantity(product);
+      }
+      else {
+        
+        console.log("\nThat item is not in the inventory.");
+        connectProducts();
+      }
+    });
+}
+
+
   
