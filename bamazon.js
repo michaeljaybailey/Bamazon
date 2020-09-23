@@ -63,5 +63,35 @@ var connection = mysql.createConnection({
     });
 }
 
+function askQuantity(product) {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          name: "quantity",
+          message: "How many would you like? [Quit with Q]",
+          validate: function(val) {
+            return val > 0 || val.toLowerCase() === "q";
+          }
+        }
+      ])
+      .then(function(val) {
+        
+        checkIfShouldExit(val.quantity);
+        var quantity = parseInt(val.quantity);
+  
+        
+        if (quantity > product.stock_quantity) {
+          console.log("\nNot Enough Product Available!");
+          loadProducts();
+        }
+        else {
+          
+          Purchase(product, quantity);
+        }
+      });
+  }
+  
+
 
   
