@@ -46,7 +46,7 @@ var connection = mysql.createConnection({
     ])
     .then(function(val) {
       
-      checkIfShouldExit(val.choice);
+      Exit(val.choice);
       var choiceId = parseInt(val.choice);
       var product = checkInventory(choiceId, inventory);
 
@@ -77,13 +77,13 @@ function askQuantity(product) {
       ])
       .then(function(val) {
         
-        checkIfShouldExit(val.quantity);
+        Exit(val.quantity);
         var quantity = parseInt(val.quantity);
   
         
         if (quantity > product.stock_quantity) {
           console.log("\nNot Enough Product Available!");
-          loadProducts();
+          connectProducts();
         }
         else {
           
@@ -92,6 +92,37 @@ function askQuantity(product) {
       });
   }
   
+  function Purchase(product, quantity) {
+    connection.query(
+      "UPDATE products SET stock_quantity = stock_quantity - ? WHERE item_id = ?",
+      [quantity, product.item_id],
+      function(err, res) {
+       
+        console.log("\nYou have purchased " + quantity + " " + product.product_name + "'s! Congrats!");
+        connectProducts();
+      }
+    );
+  }
+  
 
 
+  function checkInventory(choiceId, inventory) {
+    for (var i = 0; i < inventory.length; i++) {
+      if (inventory[i].item_id === choiceId) {
+        
+        return inventory[i];
+      }
+    }
+  
+
+    return null;
+  }
+  
+  function Exit(choice) {
+    if (choice.toLowerCase() === "q") {
+      
+      console.log("We hope to see you soon!");
+      process.exit(0);
+    }
+}
   
