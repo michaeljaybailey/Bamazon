@@ -9,7 +9,7 @@ var connection = mysql.createConnection({
   
     user: "root",
    
-    password: "",
+    password: "password",
     database: "bamazon"
   });
   
@@ -22,7 +22,7 @@ var connection = mysql.createConnection({
   });
   
   function connectProducts() {
-      connection.query("SELECT * FROM products", function(err, red) {
+      connection.query("SELECT * FROM products", function(err, res) {
           if (err) throw err;
 
           console.table(res);
